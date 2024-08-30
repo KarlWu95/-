@@ -1,0 +1,2194 @@
+<!doctype html>
+<html>
+
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/de4894bcda.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <title>東購2.0-建立訂單小工具</title>
+    <meta charset="utf-8" />
+</head>
+
+<body>
+    <header>
+        <div class='container'>
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="#">
+                        <img src="etwarm_red.png">
+                    </a>
+
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    頁面
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#basic-con">訂單基本條件</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#item-list">商品清單</a></li>
+                                    <li><a class="dropdown-item" href="#marketing-info">行銷資訊</a></li>
+                                    <li><a class="dropdown-item" href="#payment-info">付款資訊</a></li>
+                                    <li><a class="dropdown-item" href="#invoice-info">發票資訊</a></li>
+                                    <li><a class="dropdown-item" href="#shipping-info">貨運資訊</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <div class="d-flex align-items-center">
+                            <div class="input-group me-2">
+                                <span class="input-group-text">Item 數量</span>
+                                <input type="number" id="numItems" class="form-control" value="1" min="1">
+                                <button id="generateItemsButton" class="btn btn-success" type="button">送出
+
+                                </button>
+                            </div>
+                            <form class="d-flex" role="search">
+                                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                <button class="btn btn-outline-success" type="submit">Search</button>
+                            </form>
+                        </div>
+                    </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="mb-4">
+            <label for="basic-url" class="form-label">&emsp;<i class="fa-solid fa-compass"></i>&emsp;請輸入URL</label>
+            <div class="input-group">
+                <span class="input-group-text" id="basic-addon3">https://</span>
+                <input type="text" class="form-control" id="basic-url"
+                    value="dev-ehs.apps.sit.ehsn.systems/api/sales-core/OrderModification/CreateOrder"
+                    aria-describedby="basic-addon3 basic-addon4">
+                <input class="btn btn-secondary" type="submit" value="Submit">
+            </div>
+            <div class="form-text" id="basic-addon4">&emsp;</div>
+        </div>
+    </div>
+    </div>
+
+
+    <div class="container">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="basic-con">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                    aria-controls="panelsStayOpen-collapseOne">
+                    訂單基本條件
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                <div class="accordion-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="client-order-id">Client Order ID<small
+                                            class="text-muted note">（客戶端訂單編號）</small></span>
+                                    <input type="text" class="form-control" value="ORD123456" id="clientOrderId"
+                                        aria-label="Sizing example input">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="customer-id">Customer ID
+                                        <small class="text-muted note">（客戶編號）</small>
+                                    </span>
+                                    <input type="number" class="form-control" id="customerId"
+                                        aria-label="Sizing example input">
+                                </div>
+                                <div id="customerIdMessage" class="form-text text-danger">
+                                    請輸入Customer ID
+                                </div>
+                            </div>
+
+                            <script>
+                                const customerIdInput = document.getElementById('customerId');
+                                const customerIdMessage = document.getElementById('customerIdMessage');
+
+                                customerIdInput.addEventListener('input', () => {
+                                    if (customerIdInput.value.trim() !== '') {
+                                        customerIdMessage.style.display = 'none';
+                                    } else {
+                                        customerIdMessage.style.display = 'block';
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="call-source">Call Source<small
+                                            class="text-muted note">（下單來源）</small></span>
+                                    <input type="text" class="form-control" value="Online" id="callSource"
+                                        aria-label="Sizing example input">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="order-amount">Order Amount<small
+                                            class="text-muted note">（訂單金額）</small></span>
+                                    <input type="number" class="form-control" value="3000" id="orderAmount"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="input-group-text" for="orderSource">Order Source<small
+                                            class="text-muted note">（訂單來源）</small></label>
+                                    <select class="form-select" id="orderSource" aria-label="Default select example">
+                                        <option selected value="1001">請選擇</option>
+                                        <option value="1001">電視(1001)</option>
+                                        <option value="1002">網絡(1002)</option>
+                                        <option value="1003">型錄(1003)</option>
+                                        <option value="1004">手機(小網)(1004)</option>
+                                        <option value="1005">IVR(1005)</option>
+                                        <option value="1006">中信商城(1006)</option>
+                                        <option value="1007">員購批次匯入(1007)</option>
+                                        <option value="1008">ET2轉單(1008)</option>
+                                        <option value="1009">客服批次轉單(1009)</option>
+                                        <option value="1010">自營員購(1010)</option>
+                                        <option value="1011">APP(1011)</option>
+                                        <option value="1012">墨攻移工商店(1012)</option>
+                                        <option value="1013">熊媽媽買菜網(1013)</option>
+                                        <option value="1014">禾力科技(1014)</option>
+                                        <option value="1015">肯驛(1015)</option>
+                                        <option value="1016">店中店(1016)</option>
+                                        <option value="1017">smartTV(1017)</option>
+                                        <option value="1018">四季線上影視(OTT)(1018)</option>
+                                        <option value="1019">LITV APP(OTT)(1019)</option>
+                                        <option value="1020">禾力魔鏡(1020)</option>
+                                        <option value="1022">台灣柑仔店(1022)</option>
+                                        <option value="1023">電行推廣 - outbound(1023)</option>
+                                        <option value="1024">MOD(1024)</option>
+                                        <option value="1025">OVO電視盒(OTT)(1025)</option>
+                                        <option value="1026">MOD平台(1026)</option>
+                                        <option value="1027">第四台APP(OTT)(1027)</option>
+                                        <option value="1028">分眾住宅(1028)</option>
+                                        <option value="1030">電子報(OTT)(1030)</option>
+                                        <option value="1031">天天車寶(1031)</option>
+                                        <option value="1032">企業福委(1032)</option>
+                                        <option value="1033">OTT(1033)</option>
+                                        <option value="1034">PAYEASY(1034)</option>
+                                        <option value="1035">MOD異業合作(1035)</option>
+                                        <option value="1036">小編網連通(1036)</option>
+                                        <option value="1037">EC快速訂購(1037)</option>
+                                        <option value="1043">中華電信(1043)</option>
+                                        <option value="1101">直消電商(1101)</option>
+                                        <option value="2001">美麗站長(2001)</option>
+                                        <option value="2002">購享賺(2002)</option>
+                                        <option value="2003">網連通(2003)</option>
+                                        <option value="2004">揪好團(2004)</option>
+                                        <option value="5041">直播(5041)</option>
+                                        <option value="5048">分眾住宅(5048)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <label class="input-group-text" for="subOrderSource">Sub Order Source<small
+                                            class="text-muted note">（子訂單來源）</small></label>
+                                    <select class="form-select" id="subOrderSource" aria-label="Default select example">
+                                        <option selected value="1001">請選擇</option>
+                                        <option value="1001">電視(1001)</option>
+                                        <option value="1002">網絡(1002)</option>
+                                        <option value="1003">型錄(1003)</option>
+                                        <option value="1004">手機(小網)(1004)</option>
+                                        <option value="1005">IVR(1005)</option>
+                                        <option value="1006">中信商城(1006)</option>
+                                        <option value="1007">員購批次匯入(1007)</option>
+                                        <option value="1008">ET2轉單(1008)</option>
+                                        <option value="1009">客服批次轉單(1009)</option>
+                                        <option value="1010">自營員購(1010)</option>
+                                        <option value="1011">APP(1011)</option>
+                                        <option value="1012">墨攻移工商店(1012)</option>
+                                        <option value="1013">熊媽媽買菜網(1013)</option>
+                                        <option value="1014">禾力科技(1014)</option>
+                                        <option value="1015">肯驛(1015)</option>
+                                        <option value="1016">店中店(1016)</option>
+                                        <option value="1017">smartTV(1017)</option>
+                                        <option value="1018">四季線上影視(OTT)(1018)</option>
+                                        <option value="1019">LITV APP(OTT)(1019)</option>
+                                        <option value="1020">禾力魔鏡(1020)</option>
+                                        <option value="1022">台灣柑仔店(1022)</option>
+                                        <option value="1023">電行推廣 - outbound(1023)</option>
+                                        <option value="1024">MOD(1024)</option>
+                                        <option value="1025">OVO電視盒(OTT)(1025)</option>
+                                        <option value="1026">MOD平台(1026)</option>
+                                        <option value="1027">第四台APP(OTT)(1027)</option>
+                                        <option value="1028">分眾住宅(1028)</option>
+                                        <option value="1030">電子報(OTT)(1030)</option>
+                                        <option value="1031">天天車寶(1031)</option>
+                                        <option value="1032">企業福委(1032)</option>
+                                        <option value="1033">OTT(1033)</option>
+                                        <option value="1034">PAYEASY(1034)</option>
+                                        <option value="1035">MOD異業合作(1035)</option>
+                                        <option value="1036">小編網連通(1036)</option>
+                                        <option value="1037">EC快速訂購(1037)</option>
+                                        <option value="1043">中華電信(1043)</option>
+                                        <option value="1101">直消電商(1101)</option>
+                                        <option value="2001">美麗站長(2001)</option>
+                                        <option value="2002">購享賺(2002)</option>
+                                        <option value="2003">網連通(2003)</option>
+                                        <option value="2004">揪好團(2004)</option>
+                                        <option value="5041">直播(5041)</option>
+                                        <option value="5048">分眾住宅(5048)</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="re-mark">Remark<small
+                                            class="text-muted note">（備註）</small></span>
+                                    <input type="text" class="form-control" id="remark" value="Test Order 1筆item"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="created-By">Created By<small
+                                            class="text-muted note">（建立人員）</small></span>
+                                    <input type="number" class="form-control" id="createdBy" value="123456"
+                                        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="order-date">Order Date<small
+                                            class="text-muted note">（訂單日期）</small></span>
+                                    <input type="text" class="form-control" id="orderDate"
+                                        value="2024-08-01T05:18:18.243Z" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="input-group">
+                                    <span class="input-group-text" id="created-date">Created Date<small
+                                            class="text-muted note">（建立日期）</small></span>
+                                    <input type="text" class="form-control" id="createdDate"
+                                        value="2024-08-01T05:18:18.243Z" aria-label="Sizing example input"
+                                        aria-describedby="inputGroup-sizing-default">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="input-group mb-3">
+                            <label class="input-group-text" for="rescueOrder">是否為Rescue Order<small
+                                    class="text-muted note">（搶單）</small></label>
+                            <select class="form-select" id="isRescueOrder" aria-label="Default select example">
+                                <option selected value="y">請選擇</option>
+                                <option value="y">是</option>
+                                <option value="n">否</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="item-list">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    商品清單
+                </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div id="itemDetailsContainer">
+                        <div class="accordion item-detail-block mb-3" id="accordionItem1">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingItem1">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseItem1" aria-expanded="true"
+                                        aria-controls="collapseItem1">
+                                        商品清單 1
+                                    </button>
+                                </h2>
+                                <div id="collapseItem1" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingItem1" data-bs-parent="#accordionItem1">
+                                    <div class="accordion-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Item-ID<small
+                                                                class="text-muted note">（訂單編號）</small></span>
+                                                        <input type="number" class="form-control itemId" value="1">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Client Item-ID<small
+                                                                class="text-muted note">（客戶項目ID）</small></span>
+                                                        <input type="text" class="form-control clientItemId"
+                                                            value="ITEM12345">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Company-ID<small
+                                                                class="text-muted note">（公司編號）</small></span>
+                                                        <input type="number" class="form-control companyId"
+                                                            value="2001">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="input-group-text" for="orderType">Order Type<small
+                                                                class="text-muted note">（訂單類型）</small></label>
+                                                        <select class="form-select" id="orderType"
+                                                            aria-label="Default select example">
+                                                            <option selected value="1001">請選擇</option>
+                                                            <option value="1001">一般訂單(1001)</option>
+                                                            <option value="1002">換貨訂單(1002)</option>
+                                                            <option value="1003">贈品訂單(1003)</option>
+                                                            <option value="1004">加價訂單(1004)</option>
+                                                            <option value="1005">A換A(1005)</option>
+                                                            <option value="1006">員購訂單(1006)</option>
+                                                            <option value="1007">行銷贈品(批次)(1007)</option>
+                                                            <option value="1008">客訴贈品單(1008)</option>
+                                                            <option value="3001">關企禮物卡(3001)</option>
+                                                            <option value="3002">非關企禮物卡(3002)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="order-qty">Order Qty<small
+                                                                class="text-muted note">（訂單數量）</small></span>
+                                                        <input type="number" class="form-control" id="orderQty"
+                                                            value="1" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="multi-sale-no">Multi Sale
+                                                            No.<small class="text-muted note">（多重碼）</small></span>
+                                                        <input type="number" class="form-control" id="multiSaleNo"
+                                                            value="12345678" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="sale-no">Sale No.<small
+                                                                class="text-muted note">（銷售編號）</small></span>
+                                                        <input type="number" class="form-control" id="saleNo" value="1"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="pr-ice">Price<small
+                                                                class="text-muted note">（價格-原價）</small></span>
+                                                        <input type="number" class="form-control" id="price"
+                                                            value="3000" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="sale-price">Sale Price<small
+                                                                class="text-muted note">（銷售價格-含稅）</small></span>
+                                                        <input type="number" class="form-control" id="salePrice"
+                                                            value="3000" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="sale-price-notax">Sale Price
+                                                            (no
+                                                            tax)<small class="text-muted note">（銷售價格-未稅）</small></span>
+                                                        <input type="number" class="form-control" id="salePriceNoTax"
+                                                            value="3100" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="sale-amount">Sale
+                                                            Amount<small class="text-muted note">（銷售金額）</small></span>
+                                                        <input type="number" class="form-control" id="saleAmount"
+                                                            value="3100" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="amount">Amount<small
+                                                                class="text-muted note">（總金額-項次金額*數量）</small></span>
+                                                        <input type="number" class="form-control" id="amount"
+                                                            value="3100" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="order-amount">Order
+                                                            Amount<small class="text-muted note">（訂單金額）</small></span>
+                                                        <input type="number" class="form-control" id="orderAmount"
+                                                            value="3100" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="discount-amount">Discount
+                                                            Amount<small class="text-muted note">（行銷折扣）</small></span>
+                                                        <input type="number" class="form-control" id="discountAmount"
+                                                            value="0" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="manual-discount">Manual
+                                                            Discount<small
+                                                                class="text-muted note">（人工折扣-變價）</small></span>
+                                                        <input type="number" class="form-control" id="manualDiscount"
+                                                            value="0" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="approved-by">Approved
+                                                            By<small class="text-muted note">（變價核准人）</small></span>
+                                                        <input type="number" class="form-control" id="approvedBy"
+                                                            value="654321" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="dec-order-amount">Dec Order
+                                                            Amount<small class="text-muted note">（折抵東森幣）</small></span>
+                                                        <input type="number" class="form-control" id="decOrderAmount"
+                                                            value="900" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="lotg-amount">Lotg
+                                                            Amount<small class="text-muted note">（樂透金）</small></span>
+                                                        <input type="number" class="form-control" id="lotgAmount"
+                                                            value="200" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="ed-amount">Ed Amount<small
+                                                                class="text-muted note">（E幣）</small></span>
+                                                        <input type="number" class="form-control" id="edAmount"
+                                                            value="50" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="express-yn">Express Yn<small
+                                                                class="text-muted note">（快速到貨）</small></span>
+                                                        <input type="text" class="form-control" id="expressYn" value="Y"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="v-dn">VDN<small
+                                                                class="text-muted note">（分機位置）</small></span>
+                                                        <input type="text" class="form-control" id="vdn" value="Vendor"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="group-order">Group
+                                                            Order<small class="text-muted note">（綑綁訂單）</small></span>
+                                                        <input type="number" class="form-control" id="groupOrder"
+                                                            value="0" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="container">
+                                        <hr />
+                                        <h6>Item Detail</h6>
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="product-id">Product-ID<small
+                                                                class="text-muted note">（商品ID）</small></span>
+                                                        <input type="number" class="form-control" id="productId"
+                                                            value="1" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="color-id">Color-ID<small
+                                                                class="text-muted note">（顏色ID）</small></span>
+                                                        <input type="number" class="form-control" id="colorId"
+                                                            value="1001" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="style-id">Style-ID<small
+                                                                class="text-muted note">（款式ID）</small></span>
+                                                        <input type="number" class="form-control" id="styleId"
+                                                            value="1001" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="q-ty">Qty<small
+                                                                class="text-muted note">（數量）</small></span>
+                                                        <input type="number" class="form-control" id="qty" value="1"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('generateItemsButton').addEventListener('click', function () {
+            const numItems = parseInt(document.getElementById('numItems').value, 10);
+
+            // Clear and regenerate Item List blocks
+            const itemListContainer = document.getElementById('itemDetailsContainer');
+            itemListContainer.innerHTML = itemListContainer.firstElementChild.outerHTML;
+
+            for (let i = 2; i <= numItems; i++) {
+                const newItemDetailBlock = document.createElement('div');
+                newItemDetailBlock.className = 'accordion item-detail-block mb-3';
+                newItemDetailBlock.id = `itemAccordion${i}`;
+                newItemDetailBlock.innerHTML = `
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingItem${i}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItem${i}" aria-expanded="false" aria-controls="collapseItem${i}">
+                        商品清單 ${i}
+                    </button>
+                </h2>
+                <div id="collapseItem${i}" class="accordion-collapse collapse" aria-labelledby="headingItem${i}">
+                    <div class="accordion-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">Item-ID<small class="text-muted note">（訂單編號）</small></span>
+                      <input type="number" class="form-control itemId" value="${i}">
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">Client Item-ID<small class="text-muted note">（客戶項目ID）</small></span>
+                      <input type="text" class="form-control clientItemId" value="ITEM12345${i}">
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                      <span class="input-group-text">Company-ID<small class="text-muted note">（公司編號）</small></span>
+                      <input type="number" class="form-control companyId" value="2001">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="container">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="input-group">
+                <label class="input-group-text" for="orderType${i}">Order Type<small
+                    class="text-muted note">（訂單類型）</small></label>
+                <select class="form-select" id="orderType${i}" aria-label="Default select example">
+                  <option selected value="1001">請選擇</option>
+                  <option value="1001">一般訂單(1001)</option>
+                  <option value="1002">換貨訂單(1002)</option>
+                  <option value="1003">贈品訂單(1003)</option>
+                  <option value="1004">加價訂單(1004)</option>
+                  <option value="1005">A換A(1005)</option>
+                  <option value="1006">員購訂單(1006)</option>
+                  <option value="1007">行銷贈品(批次)(1007)</option>
+                  <option value="1008">客訴贈品單(1008)</option>
+                  <option value="3001">關企禮物卡(3001)</option>
+                  <option value="3002">非關企禮物卡(3002)</option>
+                </select>
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="order-qty">Order Qty<small
+                    class="text-muted note">（訂單數量）</small></span>
+                <input type="number" class="form-control" id="orderQty${i}" value="1" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="multi-sale-no">Multi Sale No.<small
+                    class="text-muted note">（多重碼）</small></span>
+                <input type="number" class="form-control" id="multiSaleNo${i}" value="12345678"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="sale-no">Sale No.<small
+                    class="text-muted note">（銷售編號）</small></span>
+                <input type="number" class="form-control" id="saleNo${i}" value="1" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="pr-ice">Price<small class="text-muted note">（價格-原價）</small></span>
+                <input type="number" class="form-control" id="price${i}" value="3000" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="sale-price">Sale Price<small
+                    class="text-muted note">（銷售價格-含稅）</small></span>
+                <input type="number" class="form-control" id="salePrice${i}" value="3000"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="sale-price-notax">Sale Price (no tax)<small
+                    class="text-muted note">（銷售價格-未稅）</small></span>
+                <input type="number" class="form-control" id="salePriceNoTax${i}" value="3100"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="sale-amount">Sale Amount<small
+                    class="text-muted note">（銷售金額）</small></span>
+                <input type="number" class="form-control" id="saleAmount${i}" value="3100"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="amount">Amount<small
+                    class="text-muted note">（總金額-項次金額*數量）</small></span>
+                <input type="number" class="form-control" id="amount${i}" value="3100" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="order-amount">Order Amount<small
+                    class="text-muted note">（訂單金額）</small></span>
+                <input type="number" class="form-control" id="orderAmount${i}" value="3100"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="discount-amount">Discount Amount<small
+                    class="text-muted note">（行銷折扣）</small></span>
+                <input type="number" class="form-control" id="discountAmount${i}" value="0"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="manual-discount">Manual Discount<small
+                    class="text-muted note">（人工折扣-變價）</small></span>
+                <input type="number" class="form-control" id="manualDiscount${i}" value="0"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="approved-by">Approved By<small
+                    class="text-muted note">（變價核准人）</small></span>
+                <input type="number" class="form-control" id="approvedBy${i}" value="654321"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="dec-order-amount">Dec Order Amount<small
+                    class="text-muted note">（折抵東森幣）</small></span>
+                <input type="number" class="form-control" id="decOrderAmount${i}" value="900"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="lotg-amount">Lotg Amount<small
+                    class="text-muted note">（樂透金）</small></span>
+                <input type="number" class="form-control" id="lotgAmount${i}" value="200"
+                  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="ed-amount">Ed Amount<small
+                    class="text-muted note">（E幣）</small></span>
+                <input type="number" class="form-control" id="edAmount${i}" value="50" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+          <div class="row">
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="express-yn">Express Yn<small
+                    class="text-muted note">（快速到貨）</small></span>
+                <input type="text" class="form-control" id="expressYn${i}" value="Y" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="v-dn">VDN<small class="text-muted note">（分機位置）</small></span>
+                <input type="text" class="form-control" id="vdn${i}" value="Vendor" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+            <div class="col-md-4 mb-3">
+              <div class="input-group">
+                <span class="input-group-text" id="group-order">Group Order<small
+                    class="text-muted note">（綑綁訂單）</small></span>
+                <input type="number" class="form-control" id="groupOrder${i}" value="0" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-default">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="container">
+              <hr />
+              <h6>Item Detail</h6>
+              <div class="container">
+                  <div class="row">
+                    <div class="col-md-3 mb-3">
+                      <div class="input-group">
+                        <span class="input-group-text" id="product-id">Product-ID<small class="text-muted note">（商品ID）</small></span>
+                        <input type="number" class="form-control" id="productId${i}" value="1" aria-label="Sizing example input"
+                          aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="input-group">
+                        <span class="input-group-text" id="color-id">Color-ID<small class="text-muted note">（顏色ID）</small></span>
+                        <input type="number" class="form-control" id="colorId${i}" value="1001" aria-label="Sizing example input"
+                          aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="input-group">
+                        <span class="input-group-text" id="style-id">Style-ID<small class="text-muted note">（款式ID）</small></span>
+                        <input type="number" class="form-control" id="styleId${i}" value="1001" aria-label="Sizing example input"
+                          aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <div class="input-group">
+                        <span class="input-group-text" id="q-ty">Qty<small class="text-muted note">（數量）</small></span>
+                        <input type="number" class="form-control" id="qty${i}" value="1" aria-label="Sizing example input"
+                          aria-describedby="inputGroup-sizing-default">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+                itemListContainer.appendChild(newItemDetailBlock);
+            }
+        });
+    </script>
+
+    <div class="container">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="marketing-info">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                        行銷資訊
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div id="marketingInfoContainer">
+                            <div class="accordion marketing-info-block mb-3" id="accordionItem1">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingItem1">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseItem1" aria-expanded="true"
+                                            aria-controls="collapseItem1">
+                                            商品1-行銷資訊
+                                        </button>
+                                    </h2>
+                                    <div id="collapseItem1" class="accordion-collapse collapse show"
+                                        aria-labelledby="headingItem1" data-bs-parent="#accordionItem1">
+                                        <div class="accordion-body">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Item-ID<small
+                                                                    class="text-muted note">（項次編號）</small></span>
+                                                            <input type="number" class="form-control marketingItemId"
+                                                                value="1">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Campaign-No.<small
+                                                                    class="text-muted note">（活動編號）</small></span>
+                                                            <input type="number" class="form-control campaignNo"
+                                                                value="9999">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Redeem Type<small
+                                                                    class="text-muted note">（兌換類型）</small></span>
+                                                            <input type="text" class="form-control redeemType"
+                                                                value="Discount">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Amount<small
+                                                                    class="text-muted note">（金額）</small></span>
+                                                            <input type="number" class="form-control marketingAmount"
+                                                                value="900" aria-label="Sizing example input"
+                                                                aria-describedby="inputGroup-sizing-default">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Discount<small
+                                                                    class="text-muted note">（折扣）</small></span>
+                                                            <input type="number" class="form-control discount"
+                                                                value="900" aria-label="Sizing example input"
+                                                                aria-describedby="inputGroup-sizing-default">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 mb-3">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Coupon Code<small
+                                                                    class="text-muted note">（優惠碼）</small></span>
+                                                            <input type="text" class="form-control couponCode"
+                                                                value="COUPON123" aria-label="Sizing example input"
+                                                                aria-describedby="inputGroup-sizing-default">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <script>
+        document.getElementById('generateItemsButton').addEventListener('click', function () {
+            const numItems = parseInt(document.getElementById('numItems').value, 10);
+            const marketingInfoContainer = document.getElementById('marketingInfoContainer');
+
+            // Clear any previously generated item blocks (except the first static block)
+            marketingInfoContainer.innerHTML = marketingInfoContainer.firstElementChild.outerHTML;
+
+            // Generate additional item blocks
+            for (let i = 2; i <= numItems; i++) {
+                const newMarketingInfoBlock = document.createElement('div');
+                newMarketingInfoBlock.className = 'accordion marketing-info-block mb-3';
+                newMarketingInfoBlock.id = `marketingAccordion${i}`;
+                newMarketingInfoBlock.innerHTML = `
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingMarketing${i}">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMarketing${i}" aria-expanded="false" aria-controls="collapseMarketing${i}">
+                        商品${i}-行銷資訊
+                    </button>
+                </h2>
+                <div id="collapseMarketing${i}" class="accordion-collapse collapse" aria-labelledby="headingMarketing${i}">
+                    <div class="accordion-body">
+            <div class="container">
+              <div class="row">
+                <div class="col-md-4 mb-3">
+                  <div class="input-group">
+                    <span class="input-group-text">Item-ID<small class="text-muted note">（訂單編號）</small></span>
+                    <input type="number" class="form-control marketingItemId" value="${i}">
+                  </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Campaign-No.<small class="text-muted note">（活動編號）</small></span>
+                        <input type="number" class="form-control campaignNo" value="9999">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Redeem Type<small class="text-muted note">（兌換類型）</small></span>
+                        <input type="text" class="form-control redeemType" value="Discount">
+                    </div>
+                </div>
+
+              </div>
+            </div>
+
+
+
+            <div class="container">
+                 <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">Amount<small class="text-muted note">（金額）</small></span>
+                            <input type="number" class="form-control marketingAmount" value="900" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">Discount<small class="text-muted note">（折扣）</small></span>
+                            <input type="number" class="form-control discount" value="900" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="input-group">
+                            <span class="input-group-text">Coupon Code<small class="text-muted note">（優惠碼）</small></span>
+                                <input type="text" class="form-control couponCode" value="COUPON123" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+                marketingInfoContainer.appendChild(newMarketingInfoBlock);
+            }
+        });
+    </script>
+
+
+    <div class="container">
+        <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="payment-info">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                        付款資訊
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="container">
+                            <div id="paymentInfo" class="checkbox-group">
+                                <!-- Checkboxes will be dynamically generated here -->
+                            </div>
+
+                            <button id="addBlockButtonPayment" class="btn btn-primary add-block-btn">新增付款資訊</button>
+
+                            <div id="blockContainerPayment" class="mt-4">
+                                <!-- Dynamic blocks with checkboxes and shared input fields will be appended here -->
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('numItems').addEventListener('input', updatePaymentCheckboxes);
+                document.getElementById('addBlockButtonPayment').addEventListener('click', addPaymentBlock);
+
+                let paymentData = [];
+
+                function updatePaymentCheckboxes() {
+                    const container = document.getElementById('paymentInfo');
+                    container.innerHTML = '';
+                    const numItems = parseInt(document.getElementById('numItems').value);
+                    for (let i = 1; i <= numItems; i++) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `paymentItem${i}`;
+                        checkbox.value = i; // Store the item ID as the value
+                        checkbox.classList.add('item-checkbox');
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `paymentItem${i}`;
+                        label.innerText = `商品 ${i}`;
+
+                        const div = document.createElement('div');
+                        div.classList.add('form-check', 'form-check-inline');
+                        div.appendChild(checkbox);
+                        div.appendChild(label);
+
+                        container.appendChild(div);
+                    }
+                }
+
+                function addPaymentBlock() {
+                    const selectedCheckboxes = Array.from(document.querySelectorAll('#paymentInfo .item-checkbox:checked'));
+                    if (selectedCheckboxes.length === 0) return;
+
+                    const blockContainerPayment = document.getElementById('blockContainerPayment');
+                    const block = document.createElement('div');
+                    block.classList.add('block-container2');
+
+                    // Create a shared div for the selected checkboxes
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.classList.add('form-check');
+
+                    const itemIdList = selectedCheckboxes.map(checkbox => {
+                        const itemId = parseInt(checkbox.value);
+                        const newCheckbox = document.createElement('input');
+                        newCheckbox.type = 'checkbox';
+                        newCheckbox.checked = true;
+                        newCheckbox.disabled = true;
+                        newCheckbox.value = itemId;
+                        newCheckbox.classList.add('form-check-input');
+
+                        const newLabel = document.createElement('label');
+                        newLabel.classList.add('form-check-label');
+                        newLabel.innerText = `商品 ${itemId}`;
+
+                        checkboxDiv.appendChild(newCheckbox);
+                        checkboxDiv.appendChild(newLabel);
+
+                        // Disable selected checkboxes to prevent them from being used again
+                        checkbox.disabled = true;
+                        checkbox.checked = false;
+
+                        return { itemId: itemId };
+                    });
+
+                    block.appendChild(checkboxDiv);
+
+                    // Add shared input fields
+                    const inputGroup = document.createElement('div');
+                    inputGroup.classList.add('row', 'mt-3');
+
+                    inputGroup.innerHTML = `
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Payment-ID<small class="text-muted note">（付款授權編號）</small></span>
+                        <input type="number" class="form-control payment-id" value="1">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Auto Payment<small class="text-muted note">（自動取授權）</small></span>
+                        <select class="form-select is-auto-payment">
+                            <option value="Y">是</option>
+                            <option value="N">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Amount<small class="text-muted note">（付款金額）</small></span>
+                        <input type="number" class="form-control payment-amount" value="5100">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="PT_box" class="form-label">Payment Type<small class="text-muted note">（付款方式）</small></label>
+                    <select name="PT" class="form-select pt-box">
+                        <option value="1001">信用卡(1001)</option>
+                        <option value="1002">ATM(1002)</option>
+                        <option value="1003">POST(1003)</option>
+                        <option value="1004">COD(1004)</option>
+                        <option value="1005">現金(1005)</option>
+                        <option value="1006">禮券(1006)</option>
+                        <option value="1007">提貨券(1007)</option>
+                        <option value="1008">紅利金(1008)</option>
+                        <option value="1009">銀聯(1009)</option>
+                        <option value="1010">支付寶(1010)</option>
+                        <option value="1011">得易Ponta卡點數(1011)</option>
+                        <option value="1013">禮物卡(1013)</option>
+                        <option value="1014">東森幣(1014)</option>
+                        <option value="3000">第三方支付(3000)</option>
+                    </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="SPT_box" class="form-label">Sub Payment Type<small class="text-muted note">（子付款方式）</small></label>
+                    <select name="SPT" class="form-select spt-box">
+                        <option value="1101">LinePay(1101)</option>
+                        <option value="1102">街口支付(1102)</option>
+                        <option value="1103">後支付(AFTEE)(1103)</option>
+                        <option value="1104">Zingala(零卡分期)(1104)</option>
+                        <option value="1105">ApplePay(1105)</option>
+                        <option value="1106">3D認證信用卡(1106)</option>
+                        <option value="1110">墨攻Pay(1110)</option>
+                        <option value="1111">震宇Pay(1111)</option>
+                        <option value="1112">熊媽媽Pay(1112)</option>
+                        <option value="1113">禾力Pay(1113)</option>
+                        <option value="1115">台灣Pay(1115)</option>
+                        <option value="1116">廠商月結-台灣柑仔店(1116)</option>
+                        <option value="1117">天天車寶Pay(1117)</option>
+                        <option value="1118">永豐銀聯卡(1118)</option>
+                        <option value="1119">國旅券(1119)</option>
+                        <option value="1120">遠信免卡分期(1120)</option>
+                        <option value="1121">悠遊付(1121)</option>
+                        <option value="1122">pi錢包(1122)</option>
+                        <option value="1123">Atome後支付(1123)</option>
+                        <option value="1126">全盈支付(1126)</option>
+                        <option value="1128">廠商月結-中華電信(1128)</option>
+                        <option value="1130">icashPay(1130)</option>
+                        <option value="1133">廠商月結-靖天官網(1133)</option>
+                        <option value="1134">廠商月結-分眾團購(1134)</option>
+                        <option value="1135">全支付(1135)</option>
+                        <option value="1136">廠商月結-直消BOBOMall(1136)</option>
+                        <option value="1139">和潤支付(1139)</option>
+                        <option value="1140">廠商月結-審計部(1140)</option>
+                        <option value="1141">廠商月結-東森寵物(1141)</option>
+                        <option value="1142">廠商月結-台灣大車隊(1142)</option>
+                        <option value="1143">廠商月結-耐德團購(1143)</option>
+                        <option value="1144">中信Fula支付(1144)</option>
+                        <option value="1145">廠商月結-東森房屋股份有限公司(1145)</option>
+                        <option value="1146">GooglePay(1146)</option>
+                        <option value="1147">廠商月結-聯華電子(1147)</option>
+                        <option value="1148">廠商月結-六員環(1148)</option>
+                        <option value="1149">廠商月結-EHS直播(1149)</option>
+                        <option value="1150">廠商月結-K區自營櫃(1150)</option>
+                        <option value="1151">廠商月結-信義房屋(1151)</option>
+                        <option value="1152">廠商月結-momo網路(1152)</option>
+                        <option value="1153">廠商月結-華南銀行工會(1153)</option>
+                        <option value="1154">廠商月結-天蔥國際(1154)</option>
+                        <option value="2001">福利金(2001)</option>
+                        <option value="3001">ibon(3001)</option>
+                        <option value="3002">新光-微信支付(3002)</option>
+                        <option value="3003">永豐-支付寶(3003)</option>
+                    </select>
+                </div>
+                <hr />
+               
+   
+    <h6>&emsp;Credit Card Info</h6>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Card Number<small class="text-muted note">（卡號）</small></span>
+            <input type="text" class="form-control card-number" value="1234-5678-9012-3456">
+        </div>    
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Expired Date<small class="text-muted note">（過期日期）</small></span>
+            <input type="text" class="form-control expired-date" value="12/25">
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">CVV<small class="text-muted note">（安全碼）</small></span>
+            <input type="number" class="form-control cvv" value="123">
+        </div>
+    </div>
+
+    <h6>&emsp;Credit Card Info-HSM Info</h6>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Credit Card Cypher<small class="text-muted note">（信用卡密文）</small></span>
+            <input type="text" class="form-control credit-card-cypher" value="abc123">
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Key Sequence<small class="text-muted note">（HSM的Key Sequence）</small></span>
+            <input type="text" class="form-control key-sequence" value="abc123">
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Key Name<small class="text-muted note">（HSM的Key Name）</small></span>
+            <input type="text" class="form-control key-name" value="abc123">
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Credit Card Mark<small class="text-muted note">（信用卡隱碼）</small></span>
+            <input type="text" class="form-control credit-card-mark" value="abc123">
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Credit Card Mark 2<small class="text-muted note">（信用卡隱碼2）</small></span>
+            <input type="text" class="form-control credit-card-mark-2" value="abc123">
+        </div>
+    </div>
+    <hr />
+    <h6>&emsp;BNPL Info</h6>
+    <div class="col-md-6 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">ID</span>
+            <input type="text" class="form-control bnpl-id" value="BNPL123" readonly>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Email</span>
+            <input type="text" class="form-control bnpl-email" value="user@example.com" readonly>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Registration Date<small class="text-muted note">（註冊日期）</small></span>
+            <input type="text" class="form-control registration-date" value="2024-08-01T05:18:18.243Z" readonly>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Last Order Date<small class="text-muted note">（上筆訂單日期）</small></span>
+            <input type="text" class="form-control last-order-date" value="2024-08-01T05:18:18.243Z" readonly>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="input-group">
+            <span class="input-group-text">Last Order Amount<small class="text-muted note">（上筆訂單金額）</small></span>
+            <input type="number" class="form-control last-order-amount" value="5100" readonly>
+        </div>
+    </div>
+    <hr />
+    <div class="col-md-12 mb-3">
+                    <label for="COD" class="form-label">付款方式是否為COD</label>
+                    <select name="COD" class="form-select cod">
+                        <option value="N">否</option>
+                        <option value="Y">是</option>
+                    </select>
+                </div>
+  
+            `;
+
+                    block.appendChild(inputGroup);
+                    blockContainerPayment.appendChild(block);
+
+                    // Store the data for JSON output
+                    const newPaymentEntry = {
+                        itemIdList: itemIdList,
+                        paymentId: inputGroup.querySelector('.payment-id').value,
+                        paymentType: inputGroup.querySelector('.pt-box').value,
+                        subPaymentType: inputGroup.querySelector('.spt-box').value,
+                        isAutoPayment: inputGroup.querySelector('.is-auto-payment').value,
+                        amount: parseFloat(inputGroup.querySelector('.payment-amount').value),
+                        creditCardInfo: {
+                            hsmInfo: {
+                                creditCardCypher: inputGroup.querySelector('.credit-card-cypher').value,
+                                keySequence: inputGroup.querySelector('.key-sequence').value,
+                                keyName: inputGroup.querySelector('.key-name').value,
+                                creditCardMark: inputGroup.querySelector('.credit-card-mark').value,
+                                creditCardMark2: inputGroup.querySelector('.credit-card-mark-2').value,
+                            },
+                            cardNumber: inputGroup.querySelector('.card-number').value,
+                            expiredDate: inputGroup.querySelector('.expired-date').value,
+                            cvv: inputGroup.querySelector('.cvv').value,
+                        },
+                        bnplInfo: {
+                            id: inputGroup.querySelector('.bnpl-id').value,
+                            email: inputGroup.querySelector('.bnpl-email').value,
+                            registrationDate: inputGroup.querySelector('.registration-date').value,
+                            lastOrderDate: inputGroup.querySelector('.last-order-date').value,
+                            lastOrderAmount: inputGroup.querySelector('.last-order-amount').value,
+                        }
+                    };
+
+                    paymentData.push(newPaymentEntry);
+
+                    // Add event listeners to update the paymentData when inputs change
+                    inputGroup.querySelectorAll('input, select').forEach(input => {
+                        input.addEventListener('input', () => {
+                            updatePaymentData(newPaymentEntry, input);
+                        });
+                    });
+
+                    // Check if all checkboxes are disabled, if so, disable the add block button
+                    if (document.querySelectorAll('#paymentInfo .item-checkbox:not(:disabled)').length === 0) {
+                        document.getElementById('addBlockButtonPayment').disabled = true;
+                    }
+
+                    // Optionally, output the updated JSON for debugging
+                    console.log(JSON.stringify(paymentData, null, 2));
+                }
+
+                function updatePaymentData(entry, input) {
+                    const inputClass = input.classList;
+                    if (inputClass.contains('payment-id')) {
+                        entry.paymentId = input.value;
+                    } else if (inputClass.contains('pt-box')) {
+                        entry.paymentType = input.value;
+                    } else if (inputClass.contains('spt-box')) {
+                        entry.subPaymentType = input.value;
+                    } else if (inputClass.contains('is-auto-payment')) {
+                        entry.isAutoPayment = input.value;
+                    } else if (inputClass.contains('payment-amount')) {
+                        entry.amount = parseFloat(input.value);
+                    } else if (inputClass.contains('card-number')) {
+                        entry.creditCardInfo.cardNumber = input.value;
+                    } else if (inputClass.contains('expired-date')) {
+                        entry.creditCardInfo.expiredDate = input.value;
+                    } else if (inputClass.contains('cvv')) {
+                        entry.creditCardInfo.cvv = input.value;
+                    } else if (inputClass.contains('credit-card-cypher')) {
+                        entry.creditCardInfo.hsmInfo.creditCardCypher = input.value;
+                    } else if (inputClass.contains('key-sequence')) {
+                        entry.creditCardInfo.hsmInfo.keySequence = input.value;
+                    } else if (inputClass.contains('key-name')) {
+                        entry.creditCardInfo.hsmInfo.keyName = input.value;
+                    } else if (inputClass.contains('credit-card-mark')) {
+                        entry.creditCardInfo.hsmInfo.creditCardMark = input.value;
+                    } else if (inputClass.contains('credit-card-mark-2')) {
+                        entry.creditCardInfo.hsmInfo.creditCardMark2 = input.value;
+                    } else if (inputClass.contains('bnpl-id')) {
+                        entry.bnplInfo.id = input.value;
+                    } else if (inputClass.contains('bnpl-email')) {
+                        entry.bnplInfo.email = input.value;
+                    } else if (inputClass.contains('registration-date')) {
+                        entry.bnplInfo.registrationDate = input.value;
+                    } else if (inputClass.contains('last-order-date')) {
+                        entry.bnplInfo.lastOrderDate = input.value;
+                    } else if (inputClass.contains('last-order-amount')) {
+                        entry.bnplInfo.lastOrderAmount = parseFloat(input.value);
+                    }
+                }
+
+                // Initialize checkboxes on page load
+                updatePaymentCheckboxes();
+
+            </script>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="invoice-info">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                        發票資訊
+                    </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <div class="container">
+                            <div id="invoiceInfo" class="checkbox-group">
+                                <!-- Checkboxes will be dynamically generated here -->
+                            </div>
+
+                            <button id="addBlockButton2" class="btn btn-primary add-block-btn">新增發票資訊</button>
+
+                            <div id="blockContainer2" class="mt-4">
+                                <!-- Dynamic blocks with checkboxes and shared input fields will be appended here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.getElementById('numItems').addEventListener('input', updateCheckboxes);
+                document.getElementById('addBlockButton2').addEventListener('click', addNewBlock);
+
+                let invoiceData = [];
+
+                function updateCheckboxes() {
+                    const container = document.getElementById('invoiceInfo');
+                    container.innerHTML = '';
+                    const numItems = parseInt(document.getElementById('numItems').value);
+                    for (let i = 1; i <= numItems; i++) {
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.id = `商品 ${i}`;
+                        checkbox.value = i;  // Store the item ID as the value
+                        checkbox.classList.add('item-checkbox');
+
+                        const label = document.createElement('label');
+                        label.htmlFor = `item${i}`;
+                        label.innerText = `商品 ${i}`;
+
+                        const div = document.createElement('div');
+                        div.classList.add('form-check', 'form-check-inline');
+                        div.appendChild(checkbox);
+                        div.appendChild(label);
+
+                        container.appendChild(div);
+                    }
+                }
+
+                function addNewBlock() {
+                    const selectedCheckboxes = Array.from(document.querySelectorAll('.item-checkbox:checked'));
+                    if (selectedCheckboxes.length === 0) return;
+
+                    const blockContainer2 = document.getElementById('blockContainer2');
+                    const block = document.createElement('div');
+                    block.classList.add('block-container2');
+
+                    // Create a shared div for the selected checkboxes
+                    const checkboxDiv = document.createElement('div');
+                    checkboxDiv.classList.add('form-check');
+
+                    const itemIdList = selectedCheckboxes.map(checkbox => {
+                        const itemId = parseInt(checkbox.value);
+                        const newCheckbox = document.createElement('input');
+                        newCheckbox.type = 'checkbox';
+                        newCheckbox.checked = true;
+                        newCheckbox.disabled = true;
+                        newCheckbox.value = itemId;
+                        newCheckbox.classList.add('form-check-input');
+
+                        const newLabel = document.createElement('label');
+                        newLabel.classList.add('form-check-label');
+                        newLabel.innerText = `商品 ${itemId}`;
+
+                        checkboxDiv.appendChild(newCheckbox);
+                        checkboxDiv.appendChild(newLabel);
+
+                        // Disable selected checkboxes to prevent them from being used again
+                        checkbox.disabled = true;
+                        checkbox.checked = false;
+
+                        return { itemId: itemId };
+                    });
+
+                    block.appendChild(checkboxDiv);
+
+                    // Add shared input fields
+                    const inputGroup = document.createElement('div');
+                    inputGroup.classList.add('row', 'mt-3');
+
+                    inputGroup.innerHTML = `
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Invoice Type<small class="text-muted note">（發票類型-二聯、三聯）</small></span>
+                        <input type="text" class="form-control invoice-type" value="E">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Invoice Title<small class="text-muted note">（發票抬頭）</small></span>
+                        <input type="text" class="form-control invoice-title" value="Test Invoice">
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Invoice Address-ID<small class="text-muted note">（發票地址編號）</small></span>
+                        <input type="number" class="form-control invoice-address-id" value="123">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Unify No.<small class="text-muted note">（統一編號）</small></span>
+                        <input type="text" class="form-control unify-no" value="UNI123456">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">Love Code<small class="text-muted note">（愛心碼）</small></span>
+                        <input type="text" class="form-control love-code" value="Love123">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">E-Inv Carrier Type<small class="text-muted note">（電子發票載具類型）</small></span>
+                        <input type="number" class="form-control einv-carrier-type" value="1">
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="input-group">
+                        <span class="input-group-text">E-Inv Carrier ID<small class="text-muted note">（電子發票載具ID）</small></span>
+                        <input type="text" class="form-control einv-carrier-id" value="CAR123">
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+
+                    block.appendChild(inputGroup);
+                    blockContainer2.appendChild(block);
+
+                    // Capture the current values and update the invoiceData array
+                    const newInvoiceEntry = {
+                        itemIdList: itemIdList,
+                        invoiceType: inputGroup.querySelector('.invoice-type').value,
+                        invoiceTitle: inputGroup.querySelector('.invoice-title').value,
+                        invoiceAddressId: parseInt(inputGroup.querySelector('.invoice-address-id').value),
+                        unifyNo: inputGroup.querySelector('.unify-no').value,
+                        loveCode: inputGroup.querySelector('.love-code').value,
+                        eInvCarrierType: parseInt(inputGroup.querySelector('.einv-carrier-type').value),
+                        eInvCarrierId: inputGroup.querySelector('.einv-carrier-id').value,
+                    };
+
+                    invoiceData.push(newInvoiceEntry);
+
+                    // Add event listeners to update the invoiceData when inputs change
+                    inputGroup.querySelectorAll('input').forEach(input => {
+                        input.addEventListener('input', () => {
+                            updateInvoiceData(newInvoiceEntry, input);
+                        });
+                    });
+
+                    // Optionally, output the updated JSON for debugging
+                    console.log(JSON.stringify(invoiceData, null, 2));
+
+                    // Check if all checkboxes are disabled, if so, disable the add block button
+                    if (document.querySelectorAll('.item-checkbox:not(:disabled)').length === 0) {
+                        document.getElementById('addBlockButton2').disabled = true;
+                    }
+                }
+
+                function updateInvoiceData(entry, input) {
+                    const inputClass = input.classList;
+                    if (inputClass.contains('invoice-type')) {
+                        entry.invoiceType = input.value;
+                    } else if (inputClass.contains('invoice-title')) {
+                        entry.invoiceTitle = input.value;
+                    } else if (inputClass.contains('invoice-address-id')) {
+                        entry.invoiceAddressId = parseInt(input.value);
+                    } else if (inputClass.contains('unify-no')) {
+                        entry.unifyNo = input.value;
+                    } else if (inputClass.contains('love-code')) {
+                        entry.loveCode = input.value;
+                    } else if (inputClass.contains('einv-carrier-type')) {
+                        entry.eInvCarrierType = parseInt(input.value);
+                    } else if (inputClass.contains('einv-carrier-id')) {
+                        entry.eInvCarrierId = input.value;
+                    }
+                }
+
+                // Initialize checkboxes on page load
+                updateCheckboxes();
+            </script>
+        </div>
+    </div>
+    </div>
+    </div>
+    <div class="container">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="shipping-info">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
+                    貨運資訊
+                </button>
+            </h2>
+            <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                    <div id="shippingInfoContainer">
+                        <div class="accordion shipping-info-block mb-3" id="accordionItem1">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingItem1">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseItem1" aria-expanded="true"
+                                        aria-controls="collapseItem1">
+                                        商品1-貨運資訊
+                                    </button>
+                                </h2>
+                                <div id="collapseItem1" class="accordion-collapse collapse show"
+                                    aria-labelledby="headingItem1" data-bs-parent="#accordionItem1">
+                                    <div class="accordion-body">
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Item-ID<small
+                                                                class="text-muted note">（項次編號）</small></span>
+                                                        <input type="number" class="form-control shippingItemId"
+                                                            value="1" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Consignee<small
+                                                                class="text-muted note">（收貨人）</small></span>
+                                                        <input type="text" class="form-control consignee"
+                                                            value="Reciever AA" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Contact Number<small
+                                                                class="text-muted note">（聯絡電話）</small></span>
+                                                        <input type="text" class="form-control contactNumber"
+                                                            value="0912345678" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Home Phone<small
+                                                                class="text-muted note">（住家電話）</small></span>
+                                                        <input type="text" class="form-control homePhone"
+                                                            value="02-12345678" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Delivery Address ID<small
+                                                                class="text-muted note">（交貨地址編號）</small></span>
+                                                        <input type="number" class="form-control deliveryAddressId"
+                                                            value="123" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Email<small
+                                                                class="text-muted note">（電子郵件）</small></span>
+                                                        <input type="email" class="form-control s-email"
+                                                            value="user@example.com" aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text">Store ID<small
+                                                                class="text-muted note">（超商店號）</small></span>
+                                                        <input type="number" class="form-control storeId" value="789"
+                                                            aria-label="Sizing example input"
+                                                            aria-describedby="inputGroup-sizing-default">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <label class="input-group-text" for="askDeliveryTime">Delivery
+                                                            Time<small class="text-muted note">（配達時間）</small></label>
+                                                        <select class="form-select askDeliveryTime"
+                                                            aria-label="Default select example">
+                                                            <option selected value="1001">請選擇</option>
+                                                            <option value="1001">09:00-12:00(1001)</option>
+                                                            <option value="1002">13:00-18:00(1002)</option>
+                                                            <option value="1003">18:00-20:00(1003)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-4 mb-3">
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" id="delivery-type">Delivery
+                                                            Type<small class="text-muted note">（配送方式）</small></span>
+                                                        <select class="form-select deliveryType"
+                                                            aria-label="Default select example">
+                                                            <option selected value="1100">請選擇</option>
+                                                            <option value="1100">庫送(1100)</option>
+                                                            <option value="1101">宅配(1101)</option>
+                                                            <option value="1102">超取(1102)</option>
+                                                            <option value="1103">店售(1103)</option>
+                                                            <option value="1104">宅家取(1104)</option>
+                                                            <option value="1105">東森到店取貨(1105)</option>
+                                                            <option value="1200">廠送(1200)</option>
+                                                            <option value="1201">宅配(1201)</option>
+                                                            <option value="1202">超取(1202)</option>
+                                                            <option value="1203">到廠取貨(1203)</option>
+                                                            <option value="1300">特約(1300)</option>
+                                                            <option value="1301">宅配(1301)</option>
+                                                            <option value="1302">店配(1302)</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            document.getElementById('generateItemsButton').addEventListener('click', function () {
+                const numItems = parseInt(document.getElementById('numItems').value, 10);
+                const shippingInfoContainer = document.getElementById('shippingInfoContainer');
+
+                // Clear any previously generated item blocks (except the first static block)
+                shippingInfoContainer.innerHTML = shippingInfoContainer.firstElementChild.outerHTML;
+
+                // Generate additional shipping info blocks
+                for (let i = 2; i <= numItems; i++) {
+                    const newShippingInfoBlock = document.createElement('div');
+                    newShippingInfoBlock.className = 'accordion shipping-info-block mb-3';
+                    newShippingInfoBlock.id = `accordionItem${i}`;
+                    newShippingInfoBlock.innerHTML = `
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingItem${i}">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseItem${i}" aria-expanded="false" aria-controls="collapseItem${i}">
+                  商品${i}-貨運資訊
+                </button>
+              </h2>
+              <div id="collapseItem${i}" class="accordion-collapse collapse" aria-labelledby="headingItem${i}">
+               
+              <div class="accordion-body">
+  
+                  <div class="container">
+                                  <div class="row">
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Item-ID<small class="text-muted note">（項次編號）</small></span>
+                                              <input type="number" class="form-control shippingItemId" value="${i}" aria-label="Sizing example input"
+                                              aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Consignee<small
+                                                  class="text-muted note">（收貨人）</small></span>
+                                              <input type="text" class="form-control consignee" value="Reciever AA ${i}" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Contact Number<small
+                                                  class="text-muted note">（聯絡電話）</small></span>
+                                              <input type="text" class="form-control contactNumber" value="0912345678" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+  
+                              <div class="container">
+                                  <div class="row">
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Home Phone<small
+                                                  class="text-muted note">（住家電話）</small></span>
+                                              <input type="text" class="form-control homePhone" value="02-12345678" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Delivery Address ID<small
+                                                  class="text-muted note">（交貨地址編號）</small></span>
+                                              <input type="number" class="form-control deliveryAddressId" value="123${i}"  aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" >
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Email<small class="text-muted note">（電子郵件）</small></span>
+                                              <input type="email" class="form-control s-email"
+                                                  value="user${i}@example.com" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+  
+                              <div class="container">
+                                  <div class="row">
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text">Store ID<small
+                                                  class="text-muted note">（超商店號）</small></span>
+                                              <input type="number" class="form-control storeId" value="789${i}" aria-label="Sizing example input"
+                                              aria-describedby="inputGroup-sizing-default">
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <label class="input-group-text" for="askDeliveryTime${i}">Delivery Time<small
+                                                  class="text-muted note">（配達時間）</small></label>
+                                              <select class="form-select askDeliveryTime" id="askDeliveryTime${i}" aria-label="Default select example">
+                                                <option selected value="1001">請選擇</option>
+                                                <option value="1001">09:00-12:00(1001)</option>
+                                                <option value="1002">13:00-18:00(1002)</option>
+                                                <option value="1003">18:00-20:00(1003)</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-4 mb-3">
+                                          <div class="input-group">
+                                              <span class="input-group-text" id="delivery-type${i}">Delivery Type<small
+                                                  class="text-muted note">（配送方式）</small></span>
+                                              <select class="form-select deliveryType" id="deliveryType${i}" aria-label="Default select example">
+                                                <option selected value="1100">請選擇</option>
+                                                <option value="1100">庫送(1100)</option>
+                                                <option value="1101">宅配(1101)</option>
+                                                <option value="1102">超取(1102)</option>
+                                                <option value="1103">店售(1103)</option>
+                                                <option value="1104">宅家取(1104)</option>
+                                                <option value="1105">東森到店取貨(1105)</option>
+                                                <option value="1200">廠送(1200)</option>
+                                                <option value="1201">宅配(1201)</option>
+                                                <option value="1202">超取(1202)</option>
+                                                <option value="1203">到廠取貨(1203)</option>
+                                                <option value="1300">特約(1300)</option>
+                                                <option value="1301">宅配(1301)</option>
+                                                <option value="1302">店配(1302)</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+  
+            </div>
+          </div>
+        </div>
+      `;
+                    shippingInfoContainer.appendChild(newShippingInfoBlock);
+                }
+            });
+        </script>
+
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    <div class="container">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button class="btn btn-danger me-md-2" type="button" onClick="window.location.reload();">Cancel</button>
+            <button id="exportButton" class="btn btn-success" type="button">建立訂單</button>
+        </div>
+    </div>
+    <div class="container">
+        <h5>JSON Output:</h5>
+        <pre id="jsonOutput" class="bg-light p-3 border rounded"></pre>
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <button id="copyButton" class="btn btn-outline-secondary me-md-2" type="button">Copy JSON</button>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('exportButton').addEventListener('click', function () {
+            const formData = {
+                "clientOrderId": document.getElementById('clientOrderId').value,
+                "customerId": document.getElementById('customerId').value,
+                "orderSource": document.getElementById('orderSource').value,
+                "orderDate": document.getElementById('orderDate').value,
+                "subOrderSource": document.getElementById('subOrderSource').value,
+                "callSource": document.getElementById('callSource').value,
+                "isRescueOrder": document.getElementById('isRescueOrder').value,
+                "orderAmount": document.getElementById('orderAmount').value,
+                "remark": document.getElementById('remark').value,
+                "createdBy": document.getElementById('createdBy').value,
+                "createdDate": document.getElementById('createdDate').value,
+                "itemList": [],  // Will populate this array in the next step
+                "marketingInfo": [],  // Dynamic collection of marketingInfo
+                "paymentInfo": paymentData,
+                "invoiceInfo": invoiceData,
+                "shippingInfo": []  // Dynamic collection of shippingInfo
+            };
+
+            // Loop through each marketing-info block and collect the data
+            document.querySelectorAll('.marketing-info-block').forEach((block, index) => {
+                const item = {
+                    "itemId": block.querySelector('.marketingItemId').value,
+                    "campaignNo": block.querySelector('.campaignNo').value,
+                    "redeemType": block.querySelector('.redeemType').value,
+                    "amount": block.querySelector('.marketingAmount').value,
+                    "discount": block.querySelector('.discount').value,
+                    "couponCode": block.querySelector('.couponCode').value,
+                };
+
+                // Add item to marketingInfo array in formData
+                formData.marketingInfo.push(item);
+            });
+
+            // Loop through each item-detail block and collect the data (if needed)
+            document.querySelectorAll('.item-detail-block').forEach((block, index) => {
+                const item = {
+                    "itemId": block.querySelector('.itemId').value,
+                    "clientItemId": block.querySelector('.clientItemId').value,
+                    "companyId": block.querySelector('.companyId').value,
+                    "orderType": block.querySelector('.form-select').value,
+                    "multiSaleNo": block.querySelector('.form-control[id^="multiSaleNo"]').value,
+                    "saleNo": block.querySelector('.form-control[id^="saleNo"]').value,
+                    "orderQty": block.querySelector('.form-control[id^="orderQty"]').value,
+                    "price": block.querySelector('.form-control[id^="price"]').value,
+                    "salePrice": block.querySelector('.form-control[id^="salePrice"]').value,
+                    "salePriceNoTax": block.querySelector('.form-control[id^="salePriceNoTax"]').value,
+                    "saleAmount": block.querySelector('.form-control[id^="saleAmount"]').value,
+                    "amount": block.querySelector('.form-control[id^="amount"]').value,
+                    "orderAmount": block.querySelector('.form-control[id^="orderAmount"]').value,
+                    "discountAmount": block.querySelector('.form-control[id^="discountAmount"]').value,
+                    "manualDiscount": block.querySelector('.form-control[id^="manualDiscount"]').value,
+                    "approvedBy": block.querySelector('.form-control[id^="approvedBy"]').value,
+                    "decOrderAmount": block.querySelector('.form-control[id^="decOrderAmount"]').value,
+                    "lotgAmount": block.querySelector('.form-control[id^="lotgAmount"]').value,
+                    "edAmount": block.querySelector('.form-control[id^="edAmount"]').value,
+                    "expressYn": block.querySelector('.form-control[id^="expressYn"]').value,
+                    "vdn": block.querySelector('.form-control[id^="vdn"]').value,
+                    "groupOrder": block.querySelector('.form-control[id^="groupOrder"]').value,
+                    "itemDetail": [
+                        {
+                            "productId": block.querySelector('.form-control[id^="productId"]').value,
+                            "colorId": block.querySelector('.form-control[id^="colorId"]').value,
+                            "styleId": block.querySelector('.form-control[id^="styleId"]').value,
+                            "qty": block.querySelector('.form-control[id^="qty"]').value,
+                        }
+                    ]
+                };
+
+                // Add item to itemList array in formData
+                formData.itemList.push(item);
+            });
+            paymentData.forEach(paymentBlock => {
+                paymentBlock.itemIdList.forEach(paymentItem => {
+                    const matchingItem = formData.itemList.find(item => item.itemId == paymentItem.itemId);
+                    if (matchingItem) {
+                        paymentItem.payAmount = matchingItem.orderAmount; // Set payAmount to match orderAmount
+                    }
+                });
+            });
+
+            // Loop through each shipping-info block and collect the data
+            document.querySelectorAll('.shipping-info-block').forEach((block, index) => {
+                const item = {
+                    "itemId": block.querySelector('.shippingItemId').value,
+                    "consignee": block.querySelector('.consignee').value,
+                    "contactNumber": block.querySelector('.contactNumber').value,
+                    "homePhone": block.querySelector('.homePhone').value,
+                    "deliveryAddressId": block.querySelector('.deliveryAddressId').value,
+                    "email": block.querySelector('.s-email').value,
+                    "storeId": block.querySelector('.storeId').value,
+                    "askDeliveryTime": block.querySelector('.askDeliveryTime').value,
+                    "deliveryType": parseInt(block.querySelector('.deliveryType').value, 10)
+                };
+
+                // Add item to shippingInfo array in formData
+                formData.shippingInfo.push(item);
+            });
+
+            const jsonString = JSON.stringify(formData, null, 2);
+            document.getElementById('jsonOutput').textContent = jsonString;
+
+            // POST request with formData
+            fetch('https://dev-ehs.apps.sit.ehsn.systems/api/sales-core/OrderModification/CreateOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: jsonString,
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                    alert('Data submitted successfully!');
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                    alert('Error submitting data');
+                });
+        });
+
+        document.getElementById('copyButton').addEventListener('click', function () {
+            const jsonOutput = document.getElementById('jsonOutput').textContent;
+            navigator.clipboard.writeText(jsonOutput).then(function () {
+                alert('JSON copied to clipboard!');
+            }, function (err) {
+                console.error('Error copying JSON: ', err);
+                alert('Failed to copy JSON.');
+            });
+        });
+    </script>
+
+    <script>
+        document.getElementById('orderSource').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('orderSource').style.color = 'red';
+
+        document.getElementById('subOrderSource').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('subOrderSource').style.color = 'red';
+
+        document.getElementById('orderSource').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('orderSource').style.color = 'red';
+
+        document.getElementById('isRescueOrder').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('isRescueOrder').style.color = 'red';
+
+        document.getElementById('orderType').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('orderType').style.color = 'red';
+
+        document.getElementById('isAutoPayment').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('isAutoPayment').style.color = 'red';
+
+        document.getElementById('askDeliveryTime').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('askDeliveryTime').style.color = 'red';
+
+        document.getElementById('deliveryType').addEventListener('change', function () {
+            if (this.value === "default") {
+                this.style.color = 'red';
+            } else {
+                this.style.color = 'black';
+            }
+        });
+        document.getElementById('deliveryType').style.color = 'red';
+    </script>
+
+</body>
+
+</html>
